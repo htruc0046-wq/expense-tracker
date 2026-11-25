@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ví Của Tôi - Quản lý chi tiêu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M16 10h4v5h-4a2.5 2.5 0 0 1 0-5Z"/><circle cx="16.5" cy="12.5" r=".7"/></svg></div>
+          <span>Ví Của Tôi</span>
+        </div>
+        <nav class="nav-menu" aria-label="Điều hướng chính">
+          <button class="nav-item active" type="button" data-view="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Tổng quan</span></button>
+          <button class="nav-item" type="button" data-view="transactions"><svg viewBox="0 0 24 24"><path d="M7 7h13l-3-3M17 17H4l3 3M20 7l-3 3M4 17l3-3"/></svg><span>Giao dịch</span></button>
+          <button class="nav-item" type="button" data-view="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span>Thông tin cá nhân</span></button>
+        </nav>
+        <button class="logout-button" id="logoutButton" type="button"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M14 4h5a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-5"/></svg><span>Đăng xuất</span></button>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Mở menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+          <div><p class="eyebrow" id="todayLabel">HÔM NAY</p><h1 id="pageTitle">Tổng quan</h1></div>
+          <div class="profile"><div class="avatar" id="userAvatar">U</div><div class="profile-copy"><strong id="userName">Người dùng</strong><span>Tài khoản cá nhân</span></div></div>
+        </header>
+
+        <section class="content" id="overviewView">
+          <div class="summary-grid">
+            <article class="summary-card balance-card"><div class="summary-icon"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5v-9Z"/><path d="M16 10h5v5h-5a2.5 2.5 0 0 1 0-5Z"/></svg></div><div><span>Số dư hiện tại</span><strong id="balanceAmount">0 ₫</strong></div></article>
+            <article class="summary-card income-card"><div class="summary-icon"><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/></svg></div><div><span>Tổng thu</span><strong id="incomeAmount">0 ₫</strong></div></article>
+            <article class="summary-card expense-card"><div class="summary-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M18 13l-6 6-6-6"/></svg></div><div><span>Tổng chi</span><strong id="expenseAmount">0 ₫</strong></div></article>
+          </div>
+          <div class="analytics-grid">
+            <article class="chart-card"><div class="chart-heading"><div><h3>Thu nhập và chi tiêu</h3><p>Biểu đồ theo tháng</p></div><div class="chart-legend"><span><i class="income-dot"></i>Thu nhập</span><span><i class="expense-dot"></i>Chi tiêu</span></div></div><div class="month-chart" id="monthChart"></div></article>
+            <article class="chart-card category-card"><div class="chart-heading"><div><h3>Chi tiêu theo danh mục</h3><p>Phân bổ trong tất cả giao dịch</p></div></div><div id="categoryStats" class="category-stats"></div></article>
+          </div>
+          <div class="section-heading"><div><h2>Giao dịch gần đây</h2><p>Theo dõi dòng tiền mới nhất của bạn</p></div><button class="primary-button" id="addTransactionButton" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Thêm giao dịch</button></div>
+          <div class="transaction-panel"><div class="transaction-table-head"><span>Giao dịch</span><span>Danh mục</span><span>Ngày</span><span>Số tiền</span><span></span></div><div id="recentTransactions"></div></div>
+        </section>
+
+        <section class="content hidden" id="transactionsView">
+          <div class="section-heading transaction-heading"><div><h2>Lịch sử giao dịch</h2><p>Quản lý toàn bộ thu chi của bạn</p></div><button class="primary-button" id="addTransactionButton2" type="button"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Thêm giao dịch</button></div>
+          <div class="filters">
+            <label class="search-box"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M16 16l4 4"/></svg><input id="searchInput" type="search" placeholder="Tìm giao dịch..." /></label>
+            <select id="typeFilter" aria-label="Lọc theo loại"><option value="all">Tất cả</option><option value="income">Thu nhập</option><option value="expense">Chi tiêu</option></select>
+            <select id="categoryFilter" aria-label="Lọc theo danh mục"><option value="all">Tất cả danh mục</option><option>Lương</option><option>Thưởng</option><option>Tiền làm thêm</option><option>Kinh doanh</option><option>Ăn uống</option><option>Mua sắm</option><option>Đi lại</option><option>Hóa đơn</option><option>Giải trí</option><option>Học tập</option><option>Sức khỏe</option><option>Khác</option></select>
+            <input id="fromDateFilter" type="date" aria-label="Từ ngày" /><input id="toDateFilter" type="date" aria-label="Đến ngày" />
+            <select id="sortFilter" aria-label="Sắp xếp"><option value="newest">Mới nhất</option><option value="oldest">Cũ nhất</option></select>
+          </div>
+          <div class="transaction-panel full-panel"><div class="transaction-table-head"><span>Giao dịch</span><span>Danh mục</span><span>Ngày</span><span>Số tiền</span><span></span></div><div id="allTransactions"></div></div>
+        </section>
+
+        <section class="content hidden" id="profileView">
+          <div class="profile-card"><div class="profile-card-header"><div class="avatar large" id="profileAvatar">U</div><div><h2 id="profileName">Người dùng</h2><p id="profileEmail">email@example.com</p></div></div><div class="profile-details"><div><span>Họ và tên</span><strong id="profileNameDetail">Người dùng</strong></div><div><span>Email</span><strong id="profileEmailDetail">email@example.com</strong></div></div><button class="primary-button" id="changePasswordButton" type="button">Đổi mật khẩu</button></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="transactionModal" role="dialog" aria-modal="true"><div class="modal"><div class="modal-header"><div><p class="eyebrow">Giao dịch mới</p><h2 id="modalTitle">Thêm giao dịch</h2></div><button class="icon-button" id="closeModal" type="button" aria-label="Đóng"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <form id="transactionForm"><input type="hidden" id="transactionId" /><div class="type-toggle" aria-label="Loại giao dịch"><label><input type="radio" name="type" value="expense" checked /><span>Chi tiêu</span></label><label><input type="radio" name="type" value="income" /><span>Thu nhập</span></label></div>
+        <label class="field"><span>Tên giao dịch</span><input id="transactionName" type="text" placeholder="Ví dụ: Ăn trưa" required maxlength="60" /></label>
+        <div class="field-row"><label class="field"><span>Số tiền (₫)</span><input id="transactionAmount" type="number" placeholder="0" min="1000" step="1000" required /></label><label class="field"><span>Ngày</span><input id="transactionDate" type="date" required /></label></div>
+        <label class="field"><span>Danh mục</span><select id="transactionCategory" required></select></label><div class="modal-actions"><button class="secondary-button" id="cancelModal" type="button">Hủy</button><button class="primary-button" type="submit">Lưu giao dịch</button></div>
+      </form></div>
+    </div>
+
+    <div class="modal-backdrop hidden" id="confirmModal" role="dialog" aria-modal="true"><div class="modal confirm-modal"><div class="confirm-icon"><svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V3h8v3M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg></div><h2>Xóa giao dịch?</h2><p id="confirmMessage">Giao dịch này sẽ bị xóa khỏi lịch sử.</p><div class="modal-actions"><button class="secondary-button" id="cancelConfirm" type="button">Hủy</button><button class="danger-button" id="acceptConfirm" type="button">Xóa</button></div></div></div>
+    <div class="modal-backdrop hidden" id="passwordModal" role="dialog" aria-modal="true"><div class="modal"><div class="modal-header"><div><p class="eyebrow">Bảo mật tài khoản</p><h2>Đổi mật khẩu</h2></div><button class="icon-button" id="closePasswordModal" type="button" aria-label="Đóng">×</button></div><form id="passwordForm"><label class="field"><span>Mật khẩu hiện tại</span><input id="oldPassword" type="password" minlength="6" required /></label><label class="field"><span>Mật khẩu mới</span><input id="newPassword" type="password" minlength="6" required /></label><label class="field"><span>Xác nhận mật khẩu mới</span><input id="confirmPassword" type="password" minlength="6" required /></label><p class="auth-error" id="passwordError"></p><div class="modal-actions"><button class="secondary-button" id="cancelPassword" type="button">Hủy</button><button class="primary-button" type="submit">Cập nhật</button></div></form></div></div>
+
+    <section class="auth-screen" id="authScreen">
+      <div class="auth-visual"><div class="auth-brand"><div class="brand-mark"><svg viewBox="0 0 24 24"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z"/><path d="M16 10h4v5h-4a2.5 2.5 0 0 1 0-5Z"/></svg></div><span>Ví Của Tôi</span></div><div class="auth-illustration"><div class="phone-card"><div class="phone-top"></div><div class="phone-chart"><span class="bar bar-one"></span><span class="bar bar-two"></span><span class="bar bar-three"></span><span class="bar bar-four"></span><span class="bar bar-five"></span></div><div class="phone-lines"><i></i><i></i><i></i></div></div></div></div>
+      <div class="auth-panel"><div class="auth-box"><div class="auth-tabs"><button class="auth-tab active" type="button" data-auth="login">Đăng nhập</button><button class="auth-tab" type="button" data-auth="register">Đăng ký</button></div><div class="auth-heading"><h1 id="authTitle">Chào mừng trở lại</h1><p id="authSubtitle">Đăng nhập để quản lý tài chính của bạn</p></div>
+        <form id="authForm"><label class="field" id="nameField" hidden><span>Họ và tên</span><input id="authName" type="text" placeholder="Nguyễn Văn A" maxlength="50" /></label><label class="field"><span id="authIdentifierLabel">Họ và tên</span><input id="authEmail" type="text" placeholder="Nhập họ và tên" autocomplete="username" required /></label><label class="field"><span>Mật khẩu</span><div class="password-field"><input id="authPassword" type="password" placeholder="Nhập mật khẩu" minlength="6" required /><button type="button" id="togglePassword" aria-label="Hiện mật khẩu"><svg viewBox="0 0 24 24"><path d="M2.5 12s3.5-5 9.5-5 9.5 5 9.5 5-3.5 5-9.5 5-9.5-5-9.5-5Z"/><circle cx="12" cy="12" r="2.5"/></svg></button></div></label><label class="field" id="confirmPasswordField" hidden><span>Xác nhận mật khẩu</span><input id="authConfirmPassword" type="password" placeholder="Nhập lại mật khẩu" minlength="6" /></label><p class="auth-error" id="authError"></p><button class="auth-submit" type="submit" id="authSubmit">Đăng nhập</button></form>
+      </div></div>
+    </section>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
