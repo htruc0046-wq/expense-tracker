@@ -11,7 +11,9 @@ Website quản lý thu chi cá nhân, xây dựng bằng Flask, SQL Server, SQLA
 
 ## Cài đặt SQL Server
 
-Mở `SQLQuery1.sql` trong SSMS, kết nối đúng SQL Server instance rồi chạy script. Script tạo database `expense_tracker` nếu chưa có và tạo/cập nhật các bảng `Users` và `Transactions`.
+Trong SSMS, kết nối đúng SQL Server instance rồi chạy `database.sql` để tạo database `expense_tracker` nếu chưa có. Tiếp theo, chạy `SQLQuery1.sql` để tạo các bảng `Users` và `Transactions` nếu chúng chưa tồn tại.
+
+`SQLQuery1.sql` có thể chạy lại an toàn khi database và các bảng đã tồn tại: script không xóa dữ liệu và không tạo lại bảng hiện có. Nếu dự án/database đã có schema cũ với tên cột khác, cần bảo đảm schema khớp với model trong `models.py` trước khi chạy ứng dụng.
 
 Nếu dùng Windows Authentication, tài khoản Windows đang chạy Flask cần quyền truy cập database. Nếu dùng SQL Server Authentication, tạo/cấp quyền cho SQL login trong SSMS và cập nhật `DATABASE_URL` trong `.env`.
 
